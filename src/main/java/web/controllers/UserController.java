@@ -1,68 +1,34 @@
 package web.controllers;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import web.dao.UserDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import web.models.Role;
 import web.models.User;
+import web.services.UserService;
 
-import javax.validation.Valid;
+import java.security.Principal;
+import java.util.List;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
-    private final UserDAOImpl userDAO = new UserDAOImpl();
+    private UserService userService;
 
-    @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("users", userDAO.getAllUsers());
-        return "users/index";
-    }
-
-    @GetMapping("/{id}")
-    public String user(@PathVariable int id, Model model) {
-        model.addAttribute("user", userDAO.getUserById(id));
-        return "users/user";
-    }
-
-    @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") User user) {
-        return "users/addUser";
-    }
-
-    @PostMapping
-    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "users/addUser";
+    @GetMapping(value = "/user")
+    public String getUserPage(Model model, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        model.addAttribute("message", "You are logged in as " + principal.getName());
+        model.addAttribute("user", user);
+        System.out.println(userService.getAllRoles());
+        List<Role> roleList = userService.getAllRoles();
+        for (Role role: roleList
+        ) {
+            System.out.println(role);
         }
-        userDAO.addUser(user);
-        return "redirect:/users";
+        return "user/index";
     }
-
-    @GetMapping("/{id}/edit")
-    public String editUser(@PathVariable("id") int id, Model model) {
-        model.addAttribute("user", userDAO.getUserById(id));
-        return "users/editUser";
-    }
-
-    @PatchMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-                             @PathVariable("id") int id) {
-        if (bindingResult.hasErrors()) {
-            return "users/editUser";
-        }
-        userDAO.updateUser(id, user);
-        return "redirect:/users";
-    }
-
-    @DeleteMapping("/{id}")
-    public String removeUser(@PathVariable("id") int id) {
-        userDAO.removeUser(id);
-        return "redirect:/users";
-    }
-
 }
