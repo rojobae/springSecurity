@@ -60,5 +60,4 @@ public class Hibernate {
         jpaTransactionManager.setEntityManagerFactory(getEntityManager().getObject());
         return jpaTransactionManager;
     }
-
 }

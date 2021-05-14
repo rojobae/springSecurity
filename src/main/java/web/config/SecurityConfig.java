@@ -2,6 +2,7 @@ package web.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,7 @@ import web.config.handlers.LoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
+@ComponentScan("web")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -62,7 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").anonymous()
-                .antMatchers("/registration").anonymous()
                 // защищенные URL
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/user/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")

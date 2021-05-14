@@ -5,7 +5,7 @@
     <title>Edit user</title>
 </head>
 <body>
-<form th:method="PATCH" th:action="@{/users/{id} (id = ${user.getId()})}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/admin/{id} (id = ${user.getId()})}" th:object="${user}">
     <div>
         <label for="firstName">Enter first name:</label>
         <input th:field="*{firstName}" type="text" id="firstName"/>
@@ -32,24 +32,23 @@
         <input th:field="*{password}" type="password" id="password"/>
         <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
         <br/>
-        <label for="passwordConfirm">Confirm password:</label>
-        <input th:field="*{passwordConfirm}" type="password" id="passwordConfirm"/>
-        <div style="color: red" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">Password
-            confirm error
-        </div>
-        <br/>
-        <div class="container">
-            <select th:name="role" multiple size="2" th:required="true">
-                <option th:each="thisRole : ${roles}"
-                        th:value="${thisRole.id}"
-                        th:utext="${thisRole.role}"
-                ></option>
-            </select>
-        </div>
+        <label>
+            <input type="checkbox"
+                   name="roleAdmin"
+                   th:checked="${roleAdmin}"
+                   th:value="ROLE_ADMIN"
+                   th:text="Admin">
+        </label>
         <input type="submit" value="Update user"/>
     </div>
 </form>
-
-<a th:href="@{/logout}">Logout</a>
+<br/>
+<form th:action="@{/admin/}">
+    <button type="submit">Back</button>
+</form>
+<br/>
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Sign Out</button>
+</form>
 </body>
 </html>

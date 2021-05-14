@@ -1,6 +1,5 @@
 package web.dao;
 
-import web.models.Role;
 import web.models.User;
 
 import java.util.List;
@@ -18,8 +17,4 @@ public interface UserDAO {
     User getUserByUsername(String username);
 
     List<User> getAllUsers();
-
-    Role getRoleById(int id);
-
-    List<Role> getAllRoles();
 }

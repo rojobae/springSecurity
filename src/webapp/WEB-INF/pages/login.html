@@ -7,12 +7,12 @@
 <body>
 <div>
     <form method="post" action="/login">
-        <input name="j_username"/>
-        <input name="j_password"/>
-        <input type="submit"/>
+        <label for="j_username">Enter username: </label>
+        <input id="j_username" name="j_username" type="text">
+        <label for="j_password">Enter password: </label>
+        <input id="j_password" name="j_password" type="password">
+        <input type="submit">
     </form>
 </div>
-
-<a href="/registration">Registration</a>
 </body>
 </html>

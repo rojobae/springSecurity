@@ -10,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -42,7 +43,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotEmpty(message = "Username should not be empty")
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @NotEmpty(message = "Password should not be empty")
@@ -50,63 +51,23 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Transient
-    private String passwordConfirm;
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private Set<Role> roles;
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(String firstName, String lastName, int age, String email, String username, String password,
-                String passwordConfirm, Set<Role> roles) {
+    public User(String firstName, String lastName, int age, String email, String username, String password, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.passwordConfirm = passwordConfirm;
         this.roles = roles;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
     public int getId() {
@@ -157,19 +118,46 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
-
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

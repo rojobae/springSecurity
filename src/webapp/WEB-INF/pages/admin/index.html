@@ -14,7 +14,6 @@
         <th>Age</th>
         <th>Email</th>
         <th>Role</th>
-        <th>Create</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -25,8 +24,10 @@
         <th th:text="${user.getLastName()}">Last name</th>
         <th th:text="${user.getAge()}">Age</th>
         <th th:text="${user.getEmail()}">Email</th>
-        <th th:each="role : ${user.getRoles}" th:text="|${role.role}; |">Roles</th>
-        <th th:href="@{/admin/{id}/edit (id = ${user.getId()})}">
+        <th>
+            <p th:each="role : ${user.getRoles()}" th:text="${role.getRole()}">
+        </th>
+        <th>
             <form th:action="@{/admin/{id}/edit (id = ${user.getId()})}">
                 <input type="submit" value="Edit">
             </form>
@@ -42,8 +43,13 @@
 <form th:action="@{/admin/new}">
     <input type="submit" value="Create new user">
 </form>
-<br>
-<br>
-<a th:href="@{/logout}">Logout</a>
+<br/>
+<form th:action="@{/user/}">
+    <button type="submit">Go to your user page</button>
+</form>
+<br/>
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Sign Out</button>
+</form>
 </body>
 </html>
